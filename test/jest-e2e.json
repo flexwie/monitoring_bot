@@ -1,0 +1,19 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@app/toogoodtogo/(.*)": "<rootDir>/../libs/toogoodtogo/src/$1",
+    "@app/toogoodtogo": "<rootDir>/../libs/toogoodtogo/src",
+    "@app/cache/(.*)": "<rootDir>/../libs/cache/src/$1",
+    "@app/cache": "<rootDir>/../libs/cache/src"
+  }
+}
