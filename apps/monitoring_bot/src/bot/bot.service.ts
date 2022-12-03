@@ -1,4 +1,5 @@
 import { PrismaService } from '@app/prisma';
+import { QueueClient } from '@app/queue';
 import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf, Context, Markup } from 'telegraf';
@@ -15,6 +16,7 @@ export class BotService {
   constructor(
     @InjectBot() private bot: Telegraf<Context>,
     public client: PrismaService,
+    public queue: QueueClient,
   ) {}
 
   async registerUser(chat_id: number, name: string) {
@@ -48,6 +50,14 @@ export class BotService {
   }
 
   async sendMessage(chat_id: number, message: string) {
+    await this.queue.reportNotification(
+      await (
+        await this.client.user.findFirst({
+          where: { chat_id },
+          select: { id: true },
+        })
+      ).id,
+    );
     await this.bot.telegram.sendMessage(chat_id, message);
   }
 }

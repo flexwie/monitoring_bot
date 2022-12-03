@@ -17,6 +17,7 @@ model User {
   created_at      DateTime          @default(now())
   Subscription    Subscription[]
   TgtgCredentials TgtgCredentials[]
+  Usage           Usage[]
 }
 
 enum SubscriptionTypes {
@@ -41,4 +42,11 @@ model TgtgCredentials {
   ttl           Int
   last_login    DateTime
   tgtg_user_id  String
+}
+
+model Usage {
+  id      String   @id @default(cuid())
+  user_id String
+  user    User     @relation(fields: [user_id], references: [id])
+  date    DateTime
 }

@@ -5,8 +5,8 @@ import { BillingService } from './billing.service';
 export class BillingController {
   constructor(private readonly billingService: BillingService) {}
 
-  @Get()
-  getHello(): string {
-    return this.billingService.getHello();
+  @Get('/usage')
+  async getHello() {
+    return await this.billingService.getUsage();
   }
 }

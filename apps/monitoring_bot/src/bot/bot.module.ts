@@ -10,12 +10,14 @@ import { SubscriptionModule } from '../subscription/subscription.module';
 import { TgTgScene } from './tgtg.scene';
 import { ToogoodtogoModule } from '@app/toogoodtogo';
 import { PrismaModule } from '@app/prisma';
+import { QueueModule } from '@app/queue';
 
 @Module({
   imports: [
     PrismaModule,
     SubscriptionModule,
     ToogoodtogoModule,
+    QueueModule,
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => {

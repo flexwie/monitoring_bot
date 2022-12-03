@@ -1,4 +1,5 @@
 import { ICacheService } from '@app/cache';
+import { PrismaService } from '@app/prisma';
 import { TooGoodToGoService } from '@app/toogoodtogo';
 import { Item } from '@app/toogoodtogo/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -15,6 +16,7 @@ export class ToogoodtogoSchedule {
     public subService: SubscriptionService,
     public botService: BotService,
     public tgtgService: TooGoodToGoService,
+    public client: PrismaService,
     @Inject(ICacheService) public cache: ICacheService,
   ) {}
 

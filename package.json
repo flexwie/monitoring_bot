@@ -103,7 +103,8 @@
     "moduleNameMapper": {
       "^@app/toogoodtogo(|/.*)$": "<rootDir>/libs/toogoodtogo/src/$1",
       "^@app/cache(|/.*)$": "<rootDir>/libs/cache/src/$1",
-      "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1"
+      "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
+      "^@app/queue(|/.*)$": "<rootDir>/libs/queue/src/$1"
     }
   }
 }
