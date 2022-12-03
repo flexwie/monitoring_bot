@@ -1,9 +1,9 @@
 import { InjectRepository, Repository } from '@nestjs/azure-database';
 import { Logger } from '@nestjs/common';
 import { Start, Ctx, Hears, Update } from 'nestjs-telegraf';
-import { TemplateService } from 'src/template/template.service';
-import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
+import { TemplateService } from '../template/template.service';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 import { Context, Markup, Scenes } from 'telegraf';
 import { BotService, UserExistsError } from './bot.service';
 

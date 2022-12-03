@@ -1,8 +1,8 @@
 import { TooGoodToGoService } from '@app/toogoodtogo';
 import { Inject } from '@nestjs/common';
 import { Context, Wizard, WizardStep } from 'nestjs-telegraf';
-import { SubscriptionService } from 'src/subscription/subscription.service';
-import { SubscriptionTypes } from 'src/subscription/subscription.types';
+import { SubscriptionService } from '../subscription/subscription.service';
+import { SubscriptionTypes } from '../subscription/subscription.types';
 import { Markup, Scenes } from 'telegraf';
 
 @Wizard('tgtg')

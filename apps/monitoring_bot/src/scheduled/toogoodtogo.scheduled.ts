@@ -4,8 +4,8 @@ import { Item } from '@app/toogoodtogo/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import moment from 'moment';
-import { BotService } from 'src/bot/bot.service';
-import { SubscriptionService } from 'src/subscription/subscription.service';
+import { BotService } from '../bot/bot.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 @Injectable()
 export class ToogoodtogoSchedule {
@@ -18,8 +18,8 @@ export class ToogoodtogoSchedule {
     @Inject(ICacheService) public cache: ICacheService,
   ) {}
 
-  // @Cron('* 17-23 * * 1-6')
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  //@Cron('* 17-23 * * 1-6')
+  //@Cron(CronExpression.EVERY_10_SECONDS)
   async process() {
     const subs = await this.subService.findAllTGTGSubscriptions();
     for (const s of subs.entries) {

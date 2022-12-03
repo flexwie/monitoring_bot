@@ -1,7 +1,7 @@
 import { InjectRepository, Repository } from '@nestjs/azure-database';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
-import { User } from 'src/user/user.entity';
+import { User } from '../user/user.entity';
 import { Telegraf, Context, Markup } from 'telegraf';
 
 type UserInfo = {

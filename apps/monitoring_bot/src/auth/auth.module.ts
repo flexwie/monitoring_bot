@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BotModule } from 'src/bot/bot.module';
-import { BotService } from 'src/bot/bot.service';
+import { BotModule } from '../bot/bot.module';
+import { BotService } from '../bot/bot.service';
 import { AzureADGuard, AzureADStrategy } from './aad-guard';
 import { AuthController } from './auth.controller';
 

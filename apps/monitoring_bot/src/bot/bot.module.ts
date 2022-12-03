@@ -2,14 +2,14 @@ import { AzureTableStorageModule } from '@nestjs/azure-database';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TelegrafModule } from 'nestjs-telegraf';
-import { TemplateService } from 'src/template/template.service';
-import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
+import { TemplateService } from '../template/template.service';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 import { BotService } from './bot.service';
 import { BotUpdate } from './bot.update';
 import { OnboardingScene } from './onboarding.scene';
 import { session } from 'telegraf';
-import { SubscriptionModule } from 'src/subscription/subscription.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 import { TgTgScene } from './tgtg.scene';
 import { ToogoodtogoModule } from '@app/toogoodtogo';
 

@@ -1,7 +1,7 @@
 import { ToogoodtogoModule } from '@app/toogoodtogo';
 import { Module } from '@nestjs/common';
-import { BotModule } from 'src/bot/bot.module';
-import { SubscriptionModule } from 'src/subscription/subscription.module';
+import { BotModule } from '../bot/bot.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 import { ToogoodtogoSchedule } from './toogoodtogo.scheduled';
 import { CacheModule, ICacheService, LocalCacheService } from '@app/cache';
 

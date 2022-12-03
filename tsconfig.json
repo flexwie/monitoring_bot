@@ -31,6 +31,12 @@
       ],
       "@app/cache/*": [
         "libs/cache/src/*"
+      ],
+      "@app/prisma": [
+        "libs/prisma/src"
+      ],
+      "@app/prisma/*": [
+        "libs/prisma/src/*"
       ]
     }
   },
