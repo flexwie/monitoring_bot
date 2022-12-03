@@ -1,0 +1,8 @@
+Dockerfile
+.dockerignore
+dist
+.vscode
+.eslintrc.js
+.prettierrc
+fly.toml
+node_modules
