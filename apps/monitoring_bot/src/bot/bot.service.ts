@@ -1,7 +1,6 @@
-import { InjectRepository, Repository } from '@nestjs/azure-database';
-import { Inject, Injectable } from '@nestjs/common';
+import { PrismaService } from '@app/prisma';
+import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
-import { User } from '../user/user.entity';
 import { Telegraf, Context, Markup } from 'telegraf';
 
 type UserInfo = {
@@ -15,25 +14,23 @@ export class BotService {
 
   constructor(
     @InjectBot() private bot: Telegraf<Context>,
-    @InjectRepository(User) public userRepo: Repository<User>,
+    public client: PrismaService,
   ) {}
 
   async registerUser(chat_id: number, name: string) {
-    const userTest = await this.userRepo
-      .where('chat_id eq ?', chat_id)
-      .findAll();
-    if (userTest.entries.length == 1) {
+    const userTest = await this.client.user.count({ where: { chat_id } });
+    if (userTest == 1) {
       throw new UserExistsError(chat_id);
-    } else if (userTest.entries.length > 1) {
+    } else if (userTest > 1) {
       throw new Error('same chat id for several users');
     }
 
-    const user = new User();
-    user.chat_id = chat_id;
-    user.name = name;
-    user.created_at = new Date();
-
-    return await this.userRepo.create(user);
+    return await this.client.user.create({
+      data: {
+        chat_id,
+        name,
+      },
+    });
   }
 
   async getAllUsers() {

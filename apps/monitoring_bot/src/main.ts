@@ -1,6 +1,4 @@
-// workaround; azure table storage does not source creds from config
-require('dotenv').config();
-
+import { PrismaService } from '@app/prisma';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -12,6 +10,8 @@ async function bootstrap() {
   app.enableCors();
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
+  const prisma = app.get(PrismaService);
+  await prisma.enableShutdownHooks(app);
 
   app.listen(3000);
 }

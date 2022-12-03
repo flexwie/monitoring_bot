@@ -1,34 +1,28 @@
+import { PrismaService } from '@app/prisma';
 import { TooGoodToGoService } from '@app/toogoodtogo';
-import { InjectRepository, Repository } from '@nestjs/azure-database';
 import { Injectable } from '@nestjs/common';
-import { Subscription } from './subscription.entity';
-import { SubscriptionTypes } from './subscription.types';
+import { PrismaClient, SubscriptionTypes } from '@prisma/client';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
-    @InjectRepository(Subscription) private subRepo: Repository<Subscription>,
+    public client: PrismaService,
     public tgtgService: TooGoodToGoService,
   ) {}
 
   async getSubscriptionsForUser(id: string) {
-    const result = await this.subRepo.where('user_id eq ?', id).findAll();
-    return result.entries;
+    return await this.client.subscription.findMany({ where: { user: { id } } });
   }
 
   async createSubscription(chat_id: number, type: SubscriptionTypes) {
-    const sub = new Subscription();
-
-    sub.chat_id = chat_id;
-    sub.type = type;
-    sub.created_at = new Date();
-
-    return await this.subRepo.create(sub);
+    return await this.client.subscription.create({
+      data: { chat_id, type: type },
+    });
   }
 
   async findAllTGTGSubscriptions() {
-    return await this.subRepo
-      .where('type eq ?', SubscriptionTypes.TOOGOODTOGO)
-      .findAll();
+    return await this.client.subscription.findMany({
+      where: { type: SubscriptionTypes.TooGoodToGo },
+    });
   }
 }

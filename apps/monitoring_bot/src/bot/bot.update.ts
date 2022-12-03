@@ -1,22 +1,14 @@
-import { InjectRepository, Repository } from '@nestjs/azure-database';
 import { Logger } from '@nestjs/common';
 import { Start, Ctx, Hears, Update } from 'nestjs-telegraf';
-import { TemplateService } from '../template/template.service';
-import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { Context, Markup, Scenes } from 'telegraf';
+import { Context } from 'telegraf';
 import { BotService, UserExistsError } from './bot.service';
 
 @Update()
 export class BotUpdate {
   private readonly logger = new Logger(BotUpdate.name);
 
-  constructor(
-    public botService: BotService,
-    public templateService: TemplateService,
-    public userService: UserService,
-    @InjectRepository(User) public userRepo: Repository<User>,
-  ) {}
+  constructor(public botService: BotService, public userService: UserService) {}
 
   @Start()
   async start(@Ctx() ctx: Context<any>) {
@@ -46,7 +38,7 @@ export class BotUpdate {
   async hears(@Ctx() ctx: Context) {
     const users = await this.botService.getAllUsers();
     const t = await this.userService.getUserByChatId(ctx.from.id);
-    ctx.reply(JSON.stringify(t.entries[0].name));
+    ctx.reply(JSON.stringify(t.name));
   }
 
   @Hears('/subscriptions add <name>')

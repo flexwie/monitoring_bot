@@ -1,23 +1,20 @@
-import { InjectRepository, Repository } from '@nestjs/azure-database';
+import { PrismaService } from '@app/prisma';
 import { Injectable } from '@nestjs/common';
-import { UserDTO } from './user.dto';
-import { User } from './user.entity';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(public client: PrismaService) {}
 
   async getUserById(id: string): Promise<User> {
-    return this.userRepository.find(id, new User());
+    return this.client.user.findUniqueOrThrow({ where: { id } });
   }
 
-  async getUserByChatId(id: number) {
-    return this.userRepository.where('chat_id eq ?', id).findAll();
+  async getUserByChatId(chat_id: number) {
+    return this.client.user.findUniqueOrThrow({ where: { chat_id } });
   }
 
   async createUser(user: User): Promise<User> {
-    return this.userRepository.create(user);
+    return this.client.user.create({ data: user });
   }
 }

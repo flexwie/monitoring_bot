@@ -8,8 +8,7 @@ import {
 import { sleep } from './util';
 import moment from 'moment';
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository, Repository } from '@nestjs/azure-database';
-import { UserCredentials } from './usercredentials.entity';
+import { PrismaService } from '@app/prisma';
 
 @Injectable()
 export class TooGoodToGoService {
@@ -17,14 +16,12 @@ export class TooGoodToGoService {
 
   pollingDelay = 5000;
 
-  constructor(
-    @InjectRepository(UserCredentials)
-    public credRepo: Repository<UserCredentials>,
-  ) {}
+  constructor(public client: PrismaService) {}
 
   private async getClient(chat_id: number, from_login = false) {
-    const result = await this.credRepo.where('chat_id eq ?', chat_id).findAll();
-    const creds = result.entries[0];
+    const creds = await this.client.tgtgCredentials.findUnique({
+      where: { chat_id },
+    });
 
     if (!creds && !from_login)
       throw new CredentialsNotFound('Credentials not found (getClient)');
@@ -54,11 +51,14 @@ export class TooGoodToGoService {
               if (moment().isAfter(expiry)) {
                 const res = await this.refresh(chat_id);
                 if (res) {
-                  this.credRepo.update((creds as any).RowKey, {
-                    refresh_token: res.refreshToken,
-                    access_token: res.accessToken,
-                    last_login: res.lastLogin.toDate(),
-                    ttl: res.accessTokenTTL,
+                  await this.client.tgtgCredentials.update({
+                    where: { id: creds.id },
+                    data: {
+                      refresh_token: res.refreshToken,
+                      access_token: res.accessToken,
+                      last_login: res.lastLogin.toDate(),
+                      ttl: res.accessTokenTTL,
+                    },
                   });
                 }
               }
@@ -91,16 +91,16 @@ export class TooGoodToGoService {
       if (res && res.accessToken) {
         this.logger.log(`Successfully logged in.`);
 
-        const creds = new UserCredentials();
-        creds.access_token = res.accessToken;
-        creds.refresh_token = res.refreshToken;
-        creds.last_login = res.lastLogin.toDate();
-        creds.chat_id = chat_id;
-        creds.ttl = res.accessTokenTTL;
-        creds.tgtg_user_id = res.user.user_id;
-
-        await this.credRepo.create(creds);
-
+        await this.client.tgtgCredentials.create({
+          data: {
+            access_token: res.accessToken,
+            refresh_token: res.refreshToken,
+            last_login: res.lastLogin.toDate(),
+            chat_id: chat_id,
+            ttl: res.accessTokenTTL,
+            tgtg_user_id: res.user.user_id,
+          },
+        });
         break;
       }
       this.logger.debug(`Sleeping ${this.pollingDelay} ms.`);
@@ -145,11 +145,9 @@ export class TooGoodToGoService {
   async refresh(chat_id: number) {
     this.logger.log(`Refreshing token.`);
     const client = await this.getClient(chat_id);
-    const result = await this.credRepo.where('chat_id eq ?', chat_id).findAll();
-    const creds = result.entries[0];
-
-    if (!creds)
-      throw new CredentialsNotFound('Credentials not found (refresh)');
+    const creds = await this.client.tgtgCredentials.findUniqueOrThrow({
+      where: { chat_id },
+    });
 
     const lastLogin = moment(creds.last_login);
     const expiry = lastLogin.add(creds.ttl, 's');
@@ -174,11 +172,9 @@ export class TooGoodToGoService {
 
   async getFavorites(chat_id: number) {
     const client = await this.getClient(chat_id);
-    const result = await this.credRepo.where('chat_id eq ?', chat_id).findAll();
-    const creds = result.entries[0];
-
-    if (!creds)
-      throw new CredentialsNotFound('Credentials not found (getFavorites)');
+    const creds = await this.client.tgtgCredentials.findUniqueOrThrow({
+      where: { chat_id },
+    });
 
     const response = await client.post('discover/v1/bucket', {
       responseType: 'json',

@@ -1,9 +1,8 @@
 import { TooGoodToGoService } from '@app/toogoodtogo';
-import { Inject } from '@nestjs/common';
 import { Context, Wizard, WizardStep } from 'nestjs-telegraf';
 import { SubscriptionService } from '../subscription/subscription.service';
-import { SubscriptionTypes } from '../subscription/subscription.types';
-import { Markup, Scenes } from 'telegraf';
+import { Scenes } from 'telegraf';
+import { SubscriptionTypes } from '@prisma/client';
 
 @Wizard('tgtg')
 export class TgTgScene {
@@ -40,7 +39,7 @@ export class TgTgScene {
   async step3(@Context() ctx: any) {
     this.subService.createSubscription(
       ctx.message.chat.id,
-      SubscriptionTypes.TOOGOODTOGO,
+      SubscriptionTypes.TooGoodToGo,
     );
 
     ctx.reply('You are now subscribed to 2good2go!');

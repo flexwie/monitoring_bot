@@ -1,15 +1,9 @@
-import { AzureTableStorageModule } from '@nestjs/azure-database';
+import { PrismaModule } from '@app/prisma';
 import { Module } from '@nestjs/common';
 import { TooGoodToGoService } from './toogoodtogo.service';
-import { UserCredentials } from './usercredentials.entity';
 
 @Module({
-  imports: [
-    AzureTableStorageModule.forFeature(UserCredentials, {
-      table: 'usercredentials',
-      createTableIfNotExists: true,
-    }),
-  ],
+  imports: [PrismaModule],
   providers: [TooGoodToGoService],
   exports: [TooGoodToGoService],
 })

@@ -22,7 +22,7 @@ export class ToogoodtogoSchedule {
   //@Cron(CronExpression.EVERY_10_SECONDS)
   async process() {
     const subs = await this.subService.findAllTGTGSubscriptions();
-    for (const s of subs.entries) {
+    for (const s of subs) {
       const favorites = await this.tgtgService.getFavorites(
         parseInt(s.chat_id as any),
       );
@@ -50,7 +50,7 @@ export class ToogoodtogoSchedule {
   @Cron(CronExpression.EVERY_3_HOURS)
   async refreshCreds() {
     const subs = await this.subService.findAllTGTGSubscriptions();
-    for (const s of subs.entries) {
+    for (const s of subs) {
       this.logger.debug(
         'Trying to refresh access token for chat: ' + s.chat_id,
       );

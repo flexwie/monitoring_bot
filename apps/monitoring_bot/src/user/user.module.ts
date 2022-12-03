@@ -1,16 +1,9 @@
-import { AzureTableStorageModule } from '@nestjs/azure-database';
+import { PrismaModule } from '@app/prisma';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './user.entity';
 import { UserService } from './user.service';
 
 @Module({
-  imports: [
-    AzureTableStorageModule.forFeature(User, {
-      table: 'user',
-      createTableIfNotExists: true,
-    }),
-  ],
+  imports: [PrismaModule],
   providers: [UserService],
 })
 export class UserModule {}
