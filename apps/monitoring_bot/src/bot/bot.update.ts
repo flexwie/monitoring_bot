@@ -1,8 +1,10 @@
 import { Logger } from '@nestjs/common';
-import { Start, Ctx, Hears, Update } from 'nestjs-telegraf';
+import { Start, Ctx, Hears, Update, Action } from 'nestjs-telegraf';
 import { UserService } from '../user/user.service';
-import { Context } from 'telegraf';
+import { Context, Markup } from 'telegraf';
 import { BotService, UserExistsError } from './bot.service';
+import { MAIN_INLINE } from './keyboards';
+import { addToHistory, makeMsgHistory } from './helper';
 
 @Update()
 export class BotUpdate {
@@ -15,12 +17,12 @@ export class BotUpdate {
     this.logger.debug(`New user ${ctx.message.from.username}`);
 
     try {
-      await this.botService.registerUser(
-        ctx.update.message.chat.id,
-        ctx.update.message.from.first_name,
-      );
+      // await this.botService.registerUser(
+      //   ctx.update.message.chat.id,
+      //   ctx.update.message.from.first_name,
+      // );
 
-      await ctx.reply('Hey! Nice to have you on board!');
+      await makeMsgHistory(ctx.reply('Hey! Nice to have you on board!'), ctx);
 
       await (ctx as any).scene.enter('onboarding');
     } catch (e) {
@@ -41,7 +43,7 @@ export class BotUpdate {
     ctx.reply(JSON.stringify(t.name));
   }
 
-  @Hears('/subscriptions add <name>')
+  @Hears('/subscriptions')
   async subscriptions(@Ctx() ctx: Context) {
     console.log(ctx);
     ctx.reply('ok');
