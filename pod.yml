@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bot
+spec:
+  containers:
+  - name: bot
+    image: bot
+    args: ["node", "dist/apps/monitoring_bot/main.js"]
+    envFrom:
+      - secretRef:
+          name: appenv
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: appenv
+type: Opaque
+stringData:
+  BOT_TOKEN: 5560006353:AAGbHpFWUzVdtwpDC7z8otldfKMv4Hr3-2U
+  DATABASE_URL: "postgresql://mbot:oeirgneoran@localhost:5432/mbot?schema=public"
+  REDIS_HOST: localhost
+  REDIS_PASSWORD: eogrno
+  AAD_TENANT_ID: 9d37ea75-9d75-4de4-b02a-cd91a6b02eb4
+  AAD_CLIENT_ID: 23c1bbc2-22c1-4dc5-88ca-3bc8bb2f68fc

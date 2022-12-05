@@ -6,3 +6,4 @@ dist
 .prettierrc
 fly.toml
 node_modules
+.kpt-pipline

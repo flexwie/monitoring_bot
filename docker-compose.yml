@@ -12,6 +12,17 @@ services:
       - .env
     ports:
       - 3000:3000
+  billing:
+    entrypoint: node dist/apps/billing/main.js
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        target: billing
+    env_file:
+      - .env
+    ports:
+      - 3001:3001
   
   db:
     image: postgres

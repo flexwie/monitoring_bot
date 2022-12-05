@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+build:
+  artifacts:
+    - image: bot
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        buildArgs: 
+          target: monitoring_bot
+        
+    - image: billing
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        buildArgs: 
+          target: billing
+manifests:
+  rawYaml:
+    - pod.yml
+  
