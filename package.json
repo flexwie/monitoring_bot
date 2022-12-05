@@ -44,6 +44,7 @@
     "passport-azure-ad": "^4.3.4",
     "passport-jwt": "^4.0.0",
     "pino-http": "^8.2.1",
+    "prisma-class-generator": "^0.2.4",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "reflect-metadata": "^0.1.13",
@@ -105,7 +106,8 @@
       "^@app/toogoodtogo(|/.*)$": "<rootDir>/libs/toogoodtogo/src/$1",
       "^@app/cache(|/.*)$": "<rootDir>/libs/cache/src/$1",
       "^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
-      "^@app/queue(|/.*)$": "<rootDir>/libs/queue/src/$1"
+      "^@app/queue(|/.*)$": "<rootDir>/libs/queue/src/$1",
+      "^@app/classes(|/.*)$": "<rootDir>/libs/classes/src/$1"
     }
   }
 }

@@ -43,6 +43,12 @@
       ],
       "@app/queue/*": [
         "libs/queue/src/*"
+      ],
+      "@app/classes": [
+        "libs/classes/src"
+      ],
+      "@app/classes/*": [
+        "libs/classes/src/*"
       ]
     }
   },

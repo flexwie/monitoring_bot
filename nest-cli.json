@@ -60,6 +60,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/queue/tsconfig.lib.json"
       }
+    },
+    "classes": {
+      "type": "library",
+      "root": "libs/classes",
+      "entryFile": "index",
+      "sourceRoot": "libs/classes/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/classes/tsconfig.lib.json"
+      }
     }
   },
   "monorepo": true,
