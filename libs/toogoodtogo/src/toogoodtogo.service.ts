@@ -126,7 +126,6 @@ export class TooGoodToGoService implements ITgtgService {
       const data = response.body as PollingAuthResponse;
 
       // save this to cache
-
       return {
         accessToken: data.access_token,
         accessTokenTTL: data.access_token_ttl_seconds,
@@ -134,12 +133,6 @@ export class TooGoodToGoService implements ITgtgService {
         user: data.startup_data.user,
         lastLogin: moment(),
       };
-
-      // this.accessToken = data.access_token;
-      // this.accessTokenTTL = data.access_token_ttl_seconds;
-      // this.refreshToken = data.refresh_token;
-      // this.lastLogin = moment();
-      // this.user = data.startup_data.user;
     }
   }
 

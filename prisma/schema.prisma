@@ -33,7 +33,7 @@ enum SubscriptionTypes {
 
 model Subscription {
   id         String            @id @default(cuid())
-  user       User              @relation(fields: [chat_id], references: [chat_id])
+  user       User              @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
   chat_id    Int
   type       SubscriptionTypes
   created_at DateTime          @default(now())
@@ -42,7 +42,7 @@ model Subscription {
 model TgtgCredentials {
   id            String   @id @default(cuid())
   chat_id       Int      @unique
-  user          User     @relation(fields: [chat_id], references: [chat_id])
+  user          User     @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
   access_token  String
   refresh_token String
   ttl           Int
@@ -53,6 +53,6 @@ model TgtgCredentials {
 model Usage {
   id      String   @id @default(cuid())
   user_id String
-  user    User     @relation(fields: [user_id], references: [id])
+  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   date    DateTime
 }
