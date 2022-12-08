@@ -5,9 +5,14 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Prisma, PrismaClient, TgtgCredentials } from '@prisma/client';
-import { PrismaClientOptions } from '@prisma/client/runtime';
-import { createCipheriv, randomBytes, scrypt, createDecipheriv } from 'crypto';
+import { PrismaClient, TgtgCredentials } from '@prisma/client';
+import {
+  createCipheriv,
+  randomBytes,
+  createHash,
+  createDecipheriv,
+  scrypt,
+} from 'crypto';
 import { promisify } from 'util';
 
 @Injectable()
@@ -31,6 +36,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
 
     this.config = configService;
+
+    // sanity check
+    this.config.getOrThrow('DB_SECRET');
 
     // encrypt passwords and secrets on create/update
     this.$use(async (params, next) => {
@@ -59,21 +67,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         params.action.startsWith('find')
       ) {
         const result = await next(params);
-        if (Array.isArray(result)) {
-          return await Promise.all(
-            result.map(async (v: TgtgCredentials) => ({
-              ...v,
-              access_token: await this.decryptData(v.access_token),
-              refresh_token: await this.decryptData(v.refresh_token),
-            })),
-          );
-        } else {
-          return {
-            ...result,
-            access_token: await this.decryptData(result.access_token),
-            refresh_token: await this.decryptData(result.refresh_token),
-          };
+        if (result && result.access_token && result.refresh_token) {
+          if (Array.isArray(result)) {
+            return await Promise.all(
+              result.map(async (v: TgtgCredentials) => ({
+                ...v,
+                access_token: await this.decryptData(v.access_token),
+                refresh_token: await this.decryptData(v.refresh_token),
+              })),
+            );
+          } else {
+            return {
+              ...result,
+              access_token: await this.decryptData(result.access_token),
+              refresh_token: await this.decryptData(result.refresh_token),
+            };
+          }
         }
+
+        return result;
       }
 
       const result = await next(params);
@@ -102,24 +114,29 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
   }
 
-  private async encryptData(data: string) {
+  public async encryptData(data: string): Promise<string> {
     const secret = this.config.getOrThrow('DB_SECRET');
-    const key = (await promisify(scrypt)(secret, 'salt', 32)) as Buffer;
-    const cipher = createCipheriv('aes-256-ocb', key, this.iv);
+    const key = (await promisify(scrypt)(secret, 'salt', 24)) as Buffer;
 
-    return Buffer.concat([cipher.update(data), cipher.final()]).toString();
+    const iv = randomBytes(16);
+    const cipher = createCipheriv('aes-192-cbc' as any, key, iv);
+
+    return (
+      iv.toString('hex') +
+      '/' +
+      cipher.update(data, 'utf8', 'hex') +
+      cipher.final('hex')
+    );
   }
 
-  private async decryptData(crypt: string) {
-    const bufferedCrypt = Buffer.from(crypt, 'utf-8');
-
+  public async decryptData(crypt: string): Promise<string> {
     const secret = this.config.getOrThrow('DB_SECRET');
-    const key = (await promisify(scrypt)(secret, 'salt', 32)) as Buffer;
-    const decipher = createDecipheriv('aes-256-ocb', key, this.iv);
+    const key = (await promisify(scrypt)(secret, 'salt', 24)) as Buffer;
 
-    return Buffer.concat([
-      decipher.update(bufferedCrypt),
-      decipher.final(),
-    ]).toString();
+    const iv = Buffer.from(crypt.split('/')[0], 'hex');
+    const encrypted = crypt.split('/')[1];
+    const decipher = createDecipheriv('aes-192-cbc' as any, key, iv);
+
+    return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
   }
 }
