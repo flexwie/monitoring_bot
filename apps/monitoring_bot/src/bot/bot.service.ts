@@ -2,7 +2,8 @@ import { PrismaService } from '@app/prisma';
 import { QueueClient } from '@app/queue';
 import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
-import { Telegraf, Context, Markup } from 'telegraf';
+import { Telegraf, Context } from 'telegraf';
+import md from 'telegramify-markdown';
 
 type UserInfo = {
   name: string;
@@ -49,16 +50,28 @@ export class BotService {
     });
   }
 
-  async sendMessage(chat_id: number, message: string) {
-    await this.queue.reportNotification(
-      await (
-        await this.client.user.findFirst({
-          where: { chat_id },
-          select: { id: true },
-        })
-      ).id,
-    );
-    await this.bot.telegram.sendMessage(chat_id, message);
+  async sendMessage(
+    chat_id: number,
+    message: string,
+    opts?: { picture?: string },
+  ) {
+    const user = await this.client.user.findFirst({
+      where: { chat_id },
+      select: { id: true },
+    });
+
+    await this.queue.reportNotification(user.id);
+
+    if (opts?.picture) {
+      await this.bot.telegram.sendPhoto(chat_id, opts.picture, {
+        caption: message,
+        parse_mode: 'Markdown',
+      });
+    } else {
+      await this.bot.telegram.sendMessage(chat_id, message, {
+        parse_mode: 'Markdown',
+      });
+    }
   }
 }
 

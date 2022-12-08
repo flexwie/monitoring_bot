@@ -1,3 +1,11 @@
+export interface ITooGoodToGoService {
+  login: (email: string, chat_id: number) => Promise<void>;
+  getFavorites: (chat_id: number) => Promise<Item[]>;
+  refresh: (chat_id: number) => Promise<any>;
+}
+
+export const ITooGoodToGoService = Symbol('ICacheService');
+
 export enum State {
   WAIT = 'WAIT',
   TERMS = 'TERMS',
@@ -167,31 +175,31 @@ export interface SalesTax {
 }
 
 export interface TaxAmount {
-  code: Dinero.Currency;
+  code: unknown;
   minor_units: number;
   decimals: number;
 }
 
 export interface PriceExcludingTaxes {
-  code: Dinero.Currency;
+  code: unknown;
   minor_units: number;
   decimals: number;
 }
 
 export interface PriceIncludingTaxes {
-  code: Dinero.Currency;
+  code: unknown;
   minor_units: number;
   decimals: number;
 }
 
 export interface ValueExcludingTaxes {
-  code: Dinero.Currency;
+  code: unknown;
   minor_units: number;
   decimals: number;
 }
 
 export interface ValueIncludingTaxes {
-  code: Dinero.Currency;
+  code: unknown;
   minor_units: number;
   decimals: number;
 }

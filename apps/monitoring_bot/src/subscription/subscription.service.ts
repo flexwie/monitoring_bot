@@ -1,13 +1,13 @@
 import { PrismaService } from '@app/prisma';
-import { TooGoodToGoService } from '@app/toogoodtogo';
-import { Injectable } from '@nestjs/common';
+import { ITooGoodToGoService } from '@app/toogoodtogo';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, SubscriptionTypes } from '@prisma/client';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
     public client: PrismaService,
-    public tgtgService: TooGoodToGoService,
+    @Inject(ITooGoodToGoService) public tgtgService: ITooGoodToGoService,
   ) {}
 
   async getSubscriptionsForUser(id: string) {

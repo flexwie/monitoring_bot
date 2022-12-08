@@ -49,6 +49,12 @@
       ],
       "@app/classes/*": [
         "libs/classes/src/*"
+      ],
+      "@app/test": [
+        "libs/test/src"
+      ],
+      "@app/test/*": [
+        "libs/test/src/*"
       ]
     }
   },

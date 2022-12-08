@@ -4,14 +4,15 @@ import {
   PollingAuthResponse,
   BucketResponse,
   RefreshResponse,
-} from './types';
+  ITooGoodToGoService as ITgtgService,
+} from './type';
 import { sleep } from './util';
 import moment from 'moment';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@app/prisma';
 
 @Injectable()
-export class TooGoodToGoService {
+export class TooGoodToGoService implements ITgtgService {
   logger = new Logger(TooGoodToGoService.name);
 
   pollingDelay = 5000;

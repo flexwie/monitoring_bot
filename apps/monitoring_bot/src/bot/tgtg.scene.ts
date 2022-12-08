@@ -1,4 +1,4 @@
-import { TooGoodToGoService } from '@app/toogoodtogo';
+import { ITooGoodToGoService } from '@app/toogoodtogo';
 import { Context, Scene, SceneEnter, Use } from 'nestjs-telegraf';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { Scenes } from 'telegraf';
@@ -6,12 +6,13 @@ import { SubscriptionTypes } from '@prisma/client';
 import { SceneSessionData } from 'telegraf/typings/scenes';
 import { SessionContext } from 'telegraf/typings/session';
 import { addToHistory, makeMsgHistory } from './helper';
+import { Inject } from '@nestjs/common';
 
 @Scene('tgtg')
 export class TgTgScene {
   constructor(
     public subService: SubscriptionService,
-    public tgtgService: TooGoodToGoService,
+    @Inject(ITooGoodToGoService) public tgtgService: ITooGoodToGoService,
   ) {}
 
   @SceneEnter()
@@ -30,6 +31,15 @@ export class TgTgScene {
   ) {
     await addToHistory(ctx.message.message_id, ctx);
 
+    const regex = new RegExp(/.+\@.+\..+/);
+    if (!regex.test((ctx.message as any).text)) {
+      await makeMsgHistory(
+        ctx.reply('Please provide a valid mail address!'),
+        ctx,
+      );
+
+      return;
+    }
     await makeMsgHistory(
       ctx.reply(
         'TooGoodToGo will send you an email to verify the login. Please open the link.',
@@ -38,12 +48,12 @@ export class TgTgScene {
     );
 
     try {
-      //await this.tgtgService.login((ctx.message as any).text, ctx.chat.id);
+      await this.tgtgService.login((ctx.message as any).text, ctx.chat.id);
 
-      // this.subService.createSubscription(
-      //   ctx.message.chat.id,
-      //   SubscriptionTypes.TooGoodToGo,
-      // );
+      this.subService.createSubscription(
+        ctx.message.chat.id,
+        SubscriptionTypes.TooGoodToGo,
+      );
 
       makeMsgHistory(ctx.reply('You are now subscribed to 2good2go!'), ctx);
 

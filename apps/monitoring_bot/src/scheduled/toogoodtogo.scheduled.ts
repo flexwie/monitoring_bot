@@ -1,7 +1,7 @@
 import { ICacheService } from '@app/cache';
 import { PrismaService } from '@app/prisma';
 import { TooGoodToGoService } from '@app/toogoodtogo';
-import { Item } from '@app/toogoodtogo/types';
+import { Item, ITooGoodToGoService } from '@app/toogoodtogo';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import moment from 'moment';
@@ -15,14 +15,15 @@ export class ToogoodtogoSchedule {
   constructor(
     public subService: SubscriptionService,
     public botService: BotService,
-    public tgtgService: TooGoodToGoService,
+    @Inject(ITooGoodToGoService) public tgtgService: ITooGoodToGoService,
     public client: PrismaService,
     @Inject(ICacheService) public cache: ICacheService,
   ) {}
 
-  //@Cron('* 17-23 * * 1-6')
   //@Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron('* 16-23 * * 1-6')
   async process() {
+    this.logger.debug('Reporting favorites');
     const subs = await this.subService.findAllTGTGSubscriptions();
     for (const s of subs) {
       const favorites = await this.tgtgService.getFavorites(
@@ -43,7 +44,8 @@ export class ToogoodtogoSchedule {
       if (!is_reported) {
         this.botService.sendMessage(
           chat_id,
-          `New product at ${fav.store.store_name}`,
+          `🥨 *${fav.store.store_name} just listed ${fav.item.name}* \nBe fast and grab your bite.`,
+          { picture: fav.store.cover_picture.current_url },
         );
       }
     }

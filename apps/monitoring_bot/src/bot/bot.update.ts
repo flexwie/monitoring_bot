@@ -14,13 +14,13 @@ export class BotUpdate {
 
   @Start()
   async start(@Ctx() ctx: Context<any>) {
-    this.logger.debug(`New user ${ctx.message.from.username}`);
-
     try {
-      // await this.botService.registerUser(
-      //   ctx.update.message.chat.id,
-      //   ctx.update.message.from.first_name,
-      // );
+      await this.botService.registerUser(
+        ctx.update.message.chat.id,
+        ctx.update.message.from.first_name,
+      );
+
+      this.logger.debug(`New user ${ctx.message.from.username}`);
 
       await makeMsgHistory(ctx.reply('Hey! Nice to have you on board!'), ctx);
 
