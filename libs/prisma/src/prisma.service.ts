@@ -1,6 +1,12 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  INestApplication,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient, TgtgCredentials } from '@prisma/client';
+import { Prisma, PrismaClient, TgtgCredentials } from '@prisma/client';
+import { PrismaClientOptions } from '@prisma/client/runtime';
 import { createCipheriv, randomBytes, scrypt, createDecipheriv } from 'crypto';
 import { promisify } from 'util';
 
@@ -8,12 +14,25 @@ import { promisify } from 'util';
 export class PrismaService extends PrismaClient implements OnModuleInit {
   private iv = randomBytes(16);
   private config: ConfigService;
+  private logger = new Logger(PrismaService.name);
 
   constructor(public configService: ConfigService) {
-    super();
+    super({
+      log: [
+        {
+          emit: 'event',
+          level: 'query',
+        },
+        {
+          emit: 'event',
+          level: 'error',
+        },
+      ],
+    });
 
     this.config = configService;
 
+    // encrypt passwords and secrets on create/update
     this.$use(async (params, next) => {
       if (
         params.model == 'TgtgCredentials' &&
@@ -33,6 +52,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       return result;
     });
 
+    // decrypt passwords and secrets on read
     this.$use(async (params, next) => {
       if (
         params.model == 'TgtgCredentials' &&
@@ -59,15 +79,26 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       const result = await next(params);
       return result;
     });
+
+    //setup logging
+    (this as any).$on('query', (e) => {
+      this.logger.debug(`[${e.duration}ms] ${e.query}`);
+    });
+
+    (this as any).$on('error', (e) => {
+      this.logger.error(e);
+    });
   }
 
   async onModuleInit() {
     await this.$connect();
+    this.logger.log('Connected to database');
   }
 
   async enableShutdownHooks(app: INestApplication) {
     this.$on('beforeExit', async () => {
       await app.close();
+      this.logger.log('Closing database connection');
     });
   }
 
