@@ -37,16 +37,19 @@ export class ToogoodtogoSchedule {
 
   async buildMessage(fav: Item, chat_id: number) {
     const today = moment().format('yyyy-MM-DD');
+    const key = `${today}/${fav.store.store_id}/${chat_id}`;
     if (fav.items_available > 0) {
-      const is_reported = this.cache.get(
-        `${today}/${fav.store.store_id}/${chat_id}`,
-      );
+      const is_reported = this.cache.get(key);
+      this.logger.debug(`Fetchin from cache: ${key}`);
       if (!is_reported) {
         this.botService.sendMessage(
           chat_id,
-          `🥨 *${fav.store.store_name} just listed ${fav.item.name}* \nBe fast and grab your bite.`,
+          `🥨 *${fav.store.store_name} just posted!* \nBe fast and grab your bite.`,
           { picture: fav.store.cover_picture.current_url },
         );
+
+        //set cache
+        this.cache.set(key, '1');
       }
     }
   }
