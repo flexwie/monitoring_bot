@@ -14,7 +14,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/monitoring_bot/test/jest-e2e.json",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.0.0",

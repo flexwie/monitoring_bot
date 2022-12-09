@@ -56,3 +56,15 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           build-args: |
             target: billing
+
+      - name: Build image and push migration container
+        uses: docker/build-push-action@v2
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: .
+          file: Dockerfile.migration
+          # Note: tags has to be all lower-case
+          tags: |
+            ghcr.io/flexwie/monitoring_bot/migration:latest
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}

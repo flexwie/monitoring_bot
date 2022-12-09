@@ -1,0 +1,10 @@
+FROM node:18 as build
+ARG target
+USER node
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node . .
+RUN npm install
+
+CMD ["npm", "run", "migrate"]
