@@ -17,4 +17,11 @@ export class UserService {
   async createUser(user: User): Promise<User> {
     return this.client.user.create({ data: user });
   }
+
+  async getSubscriptionsByChatId(chat_id: number) {
+    return this.client.user.findFirstOrThrow({
+      where: { chat_id },
+      select: { Subscription: true },
+    });
+  }
 }

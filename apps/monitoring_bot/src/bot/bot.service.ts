@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf, Context, Markup } from 'telegraf';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
-import md from 'telegramify-markdown';
 
 type UserInfo = {
   name: string;
@@ -19,7 +18,12 @@ export class BotService {
     @InjectBot() private bot: Telegraf<Context>,
     public client: PrismaService,
     public queue: QueueClient,
-  ) {}
+  ) {
+    bot.telegram.setMyCommands([
+      { command: 'subscription', description: 'add a new subscription' },
+      { command: 'list', description: 'list subscriptions' },
+    ]);
+  }
 
   async registerUser(chat_id: number, name: string) {
     const userTest = await this.client.user.count({ where: { chat_id } });

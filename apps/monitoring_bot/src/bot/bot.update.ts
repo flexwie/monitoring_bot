@@ -36,16 +36,19 @@ export class BotUpdate {
     }
   }
 
-  @Hears('/users')
-  async hears(@Ctx() ctx: Context) {
-    const users = await this.botService.getAllUsers();
-    const t = await this.userService.getUserByChatId(ctx.from.id);
-    ctx.reply(JSON.stringify(t.name));
+  @Hears('/subscription')
+  async add(@Ctx() ctx: Context) {
+    ctx.reply(
+      'This command is not implemented yet... It will be in the near future',
+    );
   }
 
-  @Hears('/subscriptions')
-  async subscriptions(@Ctx() ctx: Context) {
-    console.log(ctx);
-    ctx.reply('ok');
+  @Hears('/list')
+  async list(@Ctx() ctx: Context) {
+    const result = await this.userService.getSubscriptionsByChatId(ctx.from.id);
+    const text = result.Subscription.map(
+      (s) => s.type + '; created at ' + s.created_at.toDateString(),
+    );
+    ctx.reply(`Your subscriptions:\n${text.join('\n')}`);
   }
 }
