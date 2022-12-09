@@ -31,14 +31,23 @@ export class OnboardingScene {
   }
 
   @Action('sub:tgtg:onb')
-  async wizAct(@Context() ctx: Scenes.SceneContext) {
-    // if (ctx.scene.state.subs && ctx.scene.state.subs.includes('tgtg')) {
-    //   ctx.reply('You are already subscribed to TooGoodToGo!');
-    //   ctx.wizard.step(1);
-    // }
+  async wizAct(@Context() ctx: any) {
+    if (ctx.session.subs && ctx.session.subs.includes('tgtg')) {
+      makeMsgHistory(
+        ctx.reply('You are already subscribed to TooGoodToGo!'),
+        ctx,
+      );
+      return ctx.wizard.step(1);
+    }
 
     await ctx.scene.leave();
     await ctx.scene.enter('tgtg');
+  }
+
+  @Action('sub:azure:onb')
+  async onbAzure(@Context() ctx: Scenes.WizardContext) {
+    makeMsgHistory(ctx.reply('This command is not implemented yet.'), ctx);
+    return await ctx.wizard.selectStep(1);
   }
 
   @Action('sub:done')
