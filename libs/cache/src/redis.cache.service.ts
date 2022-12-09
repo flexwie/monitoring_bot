@@ -23,6 +23,8 @@ export class RedisCacheService implements ICacheService, OnModuleInit {
     return this._client.get(key);
   }
   set(key: string, value: string, opts?: CacheOpts): void {
-    this._client.set('EX', key, value, opts?.ttl ? opts.ttl : 60 * 60 * 24);
+    this._client.set(key, value, {
+      EX: opts?.ttl ? opts.ttl : 60 * 60 * 24,
+    });
   }
 }
