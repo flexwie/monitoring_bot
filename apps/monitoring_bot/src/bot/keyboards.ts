@@ -25,3 +25,11 @@ export const buildSubOnb = (subs: string[]) =>
       },
     ],
   ]);
+
+export const buildShareLink = (id: string) =>
+  Markup.inlineKeyboard([
+    {
+      text: 'Open',
+      url: `https://share.toogoodtogo.com/item/${id}/`,
+    },
+  ]);

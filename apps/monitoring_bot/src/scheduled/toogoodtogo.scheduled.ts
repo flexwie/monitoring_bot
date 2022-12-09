@@ -7,6 +7,8 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import moment from 'moment';
 import { BotService } from '../bot/bot.service';
 import { SubscriptionService } from '../subscription/subscription.service';
+import { buildShareLink } from '../bot/keyboards';
+import { Markup } from 'telegraf';
 
 @Injectable()
 export class ToogoodtogoSchedule {
@@ -20,8 +22,11 @@ export class ToogoodtogoSchedule {
     @Inject(ICacheService) public cache: ICacheService,
   ) {}
 
-  //@Cron(CronExpression.EVERY_10_SECONDS)
-  @Cron('* 16-23 * * 1-6')
+  @Cron(
+    process.env.NODE_ENV == 'production'
+      ? '* 16-23 * * 1-6'
+      : CronExpression.EVERY_10_SECONDS,
+  )
   async process() {
     this.logger.debug('Reporting favorites');
     const subs = await this.subService.findAllTGTGSubscriptions();
@@ -45,7 +50,10 @@ export class ToogoodtogoSchedule {
         this.botService.sendMessage(
           chat_id,
           `🥨 *${fav.store.store_name} just posted!* \nBe fast and grab your bite.`,
-          { picture: fav.store.cover_picture.current_url },
+          {
+            picture: fav.store.cover_picture.current_url,
+            keyboard: buildShareLink(fav.item.item_id),
+          },
         );
 
         //set cache
@@ -53,6 +61,8 @@ export class ToogoodtogoSchedule {
       }
     }
   }
+
+  //https://share.toogoodtogo.com/login/accept/21522195/9585c6e7-c4fc-4d2a-93b5-79523d03f7d4
 
   @Cron(CronExpression.EVERY_3_HOURS)
   async refreshCreds() {

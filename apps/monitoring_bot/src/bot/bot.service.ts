@@ -2,7 +2,8 @@ import { PrismaService } from '@app/prisma';
 import { QueueClient } from '@app/queue';
 import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
-import { Telegraf, Context } from 'telegraf';
+import { Telegraf, Context, Markup } from 'telegraf';
+import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import md from 'telegramify-markdown';
 
 type UserInfo = {
@@ -53,7 +54,7 @@ export class BotService {
   async sendMessage(
     chat_id: number,
     message: string,
-    opts?: { picture?: string },
+    opts?: { picture?: string; keyboard?: Markup.Markup<InlineKeyboardMarkup> },
   ) {
     const user = await this.client.user.findFirst({
       where: { chat_id },
@@ -66,10 +67,16 @@ export class BotService {
       await this.bot.telegram.sendPhoto(chat_id, opts.picture, {
         caption: message,
         parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: opts?.keyboard.reply_markup.inline_keyboard,
+        },
       });
     } else {
       await this.bot.telegram.sendMessage(chat_id, message, {
         parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: opts?.keyboard.reply_markup.inline_keyboard,
+        },
       });
     }
   }
