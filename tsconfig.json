@@ -55,6 +55,12 @@
       ],
       "@app/test/*": [
         "libs/test/src/*"
+      ],
+      "@app/azure": [
+        "libs/azure/src"
+      ],
+      "@app/azure/*": [
+        "libs/azure/src/*"
       ]
     }
   },
