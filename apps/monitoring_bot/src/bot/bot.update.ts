@@ -3,8 +3,7 @@ import { Start, Ctx, Hears, Update, Action } from 'nestjs-telegraf';
 import { UserService } from '../user/user.service';
 import { Context, Markup } from 'telegraf';
 import { BotService, UserExistsError } from './bot.service';
-import { MAIN_INLINE } from './keyboards';
-import { addToHistory, makeMsgHistory } from './helper';
+import { makeMsgHistory } from './helper';
 
 @Update()
 export class BotUpdate {
@@ -39,8 +38,14 @@ export class BotUpdate {
   @Hears('/subscription')
   async add(@Ctx() ctx: Context) {
     ctx.reply(
-      'This command is not implemented yet... It will be in the near future',
+      'ok!',
+      Markup.inlineKeyboard([
+        { text: 'Open app', web_app: { url: 'http://localhost:3002/tg' } },
+      ]),
     );
+    //ctx.reply(
+    //'This command is not implemented yet... It will be in the near future',
+    //);
   }
 
   @Hears('/list')
@@ -50,5 +55,15 @@ export class BotUpdate {
       (s) => s.type + '; created at ' + s.created_at.toDateString(),
     );
     ctx.reply(`Your subscriptions:\n${text.join('\n')}`);
+  }
+
+  @Hears('/app')
+  async showApp(@Ctx() ctx: Context) {
+    await ctx.reply(
+      'ok!',
+      Markup.inlineKeyboard([
+        { text: 'Open app', web_app: { url: 'http://localhost:3002/tg' } },
+      ]),
+    );
   }
 }
