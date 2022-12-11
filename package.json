@@ -21,6 +21,9 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.0.0",
+    "@azure/arm-appinsights": "^4.0.0",
+    "@azure/arm-monitor": "^7.0.0",
+    "@azure/identity": "^3.1.2",
     "@nestjs/azure-database": "^2.3.0",
     "@nestjs/bull": "^0.6.2",
     "@nestjs/cli": "^9.1.5",
@@ -64,6 +67,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
+    "@golevelup/ts-jest": "^0.3.4",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@prisma/migrate": "^4.7.1",

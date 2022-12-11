@@ -25,4 +25,14 @@ export class SubscriptionService {
       where: { type: SubscriptionTypes.TooGoodToGo },
     });
   }
+
+  /**
+   * finds azure subscription with the given id
+   * @param id
+   */
+  async getAzureSubscription(id: string) {
+    return this.client.subscription.findFirstOrThrow({
+      where: { type: SubscriptionTypes.Azure, id },
+    });
+  }
 }

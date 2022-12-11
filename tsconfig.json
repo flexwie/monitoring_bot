@@ -19,55 +19,23 @@
     "noFallthroughCasesInSwitch": false,
     "jsx": "preserve",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "paths": {
-      "@app/toogoodtogo": [
-        "libs/toogoodtogo/src"
-      ],
-      "@app/toogoodtogo/*": [
-        "libs/toogoodtogo/src/*"
-      ],
-      "@app/cache": [
-        "libs/cache/src"
-      ],
-      "@app/cache/*": [
-        "libs/cache/src/*"
-      ],
-      "@app/prisma": [
-        "libs/prisma/src"
-      ],
-      "@app/prisma/*": [
-        "libs/prisma/src/*"
-      ],
-      "@app/queue": [
-        "libs/queue/src"
-      ],
-      "@app/queue/*": [
-        "libs/queue/src/*"
-      ],
-      "@app/classes": [
-        "libs/classes/src"
-      ],
-      "@app/classes/*": [
-        "libs/classes/src/*"
-      ],
-      "@app/test": [
-        "libs/test/src"
-      ],
-      "@app/test/*": [
-        "libs/test/src/*"
-      ],
-      "@app/azure": [
-        "libs/azure/src"
-      ],
-      "@app/azure/*": [
-        "libs/azure/src/*"
-      ]
+      "@app/toogoodtogo": ["libs/toogoodtogo/src"],
+      "@app/toogoodtogo/*": ["libs/toogoodtogo/src/*"],
+      "@app/cache": ["libs/cache/src"],
+      "@app/cache/*": ["libs/cache/src/*"],
+      "@app/prisma": ["libs/prisma/src"],
+      "@app/prisma/*": ["libs/prisma/src/*"],
+      "@app/queue": ["libs/queue/src"],
+      "@app/queue/*": ["libs/queue/src/*"],
+      "@app/classes": ["libs/classes/src"],
+      "@app/classes/*": ["libs/classes/src/*"],
+      "@app/test": ["libs/test/src"],
+      "@app/test/*": ["libs/test/src/*"],
+      "@app/azure": ["libs/azure/src"],
+      "@app/azure/*": ["libs/azure/src/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "ssr.config.js",
-    "dist",
-    ".ssr"
-  ]
+  "exclude": ["node_modules", "ssr.config.js", "dist", ".ssr"]
 }

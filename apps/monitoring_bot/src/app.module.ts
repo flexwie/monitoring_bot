@@ -8,6 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ScheduledModule } from './scheduled/scheduled.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { BullModule } from '@nestjs/bull';
+import { WebhooksController } from './webhooks/webhooks.controller';
 
 @Module({
   imports: [
@@ -31,5 +32,6 @@ import { BullModule } from '@nestjs/bull';
     }),
   ],
   providers: [AppService, ConfigService],
+  controllers: [WebhooksController],
 })
 export class AppModule {}
