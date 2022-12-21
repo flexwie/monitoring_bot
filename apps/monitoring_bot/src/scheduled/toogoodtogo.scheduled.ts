@@ -24,7 +24,7 @@ export class ToogoodtogoSchedule {
 
   @Cron(
     process.env.NODE_ENV == 'production'
-      ? '* 16-23 * * 1-6'
+      ? '* 9-23 * * *'
       : CronExpression.EVERY_10_SECONDS,
   )
   async process() {
@@ -57,7 +57,7 @@ export class ToogoodtogoSchedule {
         );
 
         //set cache
-        this.cache.set(key, '1');
+        this.cache.set(key, '1', { ttl: 60 * 60 * 12 });
       }
     }
   }
