@@ -24,4 +24,8 @@ export class UserService {
       select: { Subscription: true },
     });
   }
+
+  async removeUserById(chat_id: string) {
+    return this.client.user.delete({ where: { chat_id } });
+  }
 }

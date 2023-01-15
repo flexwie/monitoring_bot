@@ -50,4 +50,10 @@ export class BotUpdate {
     );
     ctx.reply(`Your subscriptions:\n${text.join('\n')}`);
   }
+
+  @Hears('/stop')
+  async stop(@Ctx() ctx: Context) {
+    await ctx.reply('Bye 👋🏻');
+    await this.userService.removeUserById(ctx.from.id.toString());
+  }
 }
