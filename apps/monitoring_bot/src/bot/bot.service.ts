@@ -25,7 +25,7 @@ export class BotService {
     ]);
   }
 
-  async registerUser(chat_id: number, name: string) {
+  async registerUser(chat_id: string, name: string) {
     const userTest = await this.client.user.count({ where: { chat_id } });
     if (userTest == 1) {
       throw new UserExistsError(chat_id);
@@ -56,7 +56,7 @@ export class BotService {
   }
 
   async sendMessage(
-    chat_id: number,
+    chat_id: string,
     message: string,
     opts?: { picture?: string; keyboard?: Markup.Markup<InlineKeyboardMarkup> },
   ) {

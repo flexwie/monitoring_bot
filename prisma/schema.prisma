@@ -3,7 +3,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl"]
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 generator classes {
@@ -13,36 +13,31 @@ generator classes {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id              String            @id @default(cuid())
   name            String
-  chat_id         Int               @unique
+  chat_id         String            @unique
   created_at      DateTime          @default(now())
   Subscription    Subscription[]
   TgtgCredentials TgtgCredentials[]
   Usage           Usage[]
 }
 
-enum SubscriptionTypes {
-  TooGoodToGo
-  Azure
-}
-
 model Subscription {
-  id         String            @id @default(cuid())
-  user       User              @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
-  chat_id    Int
-  type       SubscriptionTypes
-  created_at DateTime          @default(now())
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
+  chat_id    String
+  type       String
+  created_at DateTime @default(now())
 }
 
 model TgtgCredentials {
   id            String   @id @default(cuid())
-  chat_id       Int      @unique
+  chat_id       String   @unique
   user          User     @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
   access_token  String
   refresh_token String

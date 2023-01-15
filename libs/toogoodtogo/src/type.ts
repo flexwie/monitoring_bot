@@ -1,7 +1,7 @@
 export interface ITooGoodToGoService {
-  login: (email: string, chat_id: number) => Promise<void>;
-  getFavorites: (chat_id: number) => Promise<Item[]>;
-  refresh: (chat_id: number) => Promise<any>;
+  login: (email: string, chat_id: string) => Promise<void>;
+  getFavorites: (chat_id: string) => Promise<Item[]>;
+  refresh: (chat_id: string) => Promise<any>;
 }
 
 export const ITooGoodToGoService = Symbol('ICacheService');

@@ -31,16 +31,14 @@ export class ToogoodtogoSchedule {
     this.logger.debug('Reporting favorites');
     const subs = await this.subService.findAllTGTGSubscriptions();
     for (const s of subs) {
-      const favorites = await this.tgtgService.getFavorites(
-        parseInt(s.chat_id as any),
-      );
+      const favorites = await this.tgtgService.getFavorites(s.chat_id);
 
       const m = favorites.map((f) => this.buildMessage(f, s.chat_id));
       await Promise.all(m);
     }
   }
 
-  async buildMessage(fav: Item, chat_id: number) {
+  async buildMessage(fav: Item, chat_id: string) {
     const today = moment().format('yyyy-MM-DD');
     const key = `${today}/${fav.store.store_id}/${chat_id}`;
     if (fav.items_available > 0) {
@@ -71,7 +69,7 @@ export class ToogoodtogoSchedule {
       this.logger.debug(
         'Trying to refresh access token for chat: ' + s.chat_id,
       );
-      this.tgtgService.refresh(parseInt(s.chat_id as any));
+      this.tgtgService.refresh(s.chat_id);
     }
   }
 }

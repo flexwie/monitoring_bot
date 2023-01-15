@@ -2,7 +2,7 @@ import { ITooGoodToGoService } from '@app/toogoodtogo';
 import { Context, Scene, SceneEnter, Use } from 'nestjs-telegraf';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { Scenes } from 'telegraf';
-import { SubscriptionTypes } from '@prisma/client';
+import { SubscriptionTypes } from '../subscription/subscription.constants';
 import { SceneSessionData } from 'telegraf/typings/scenes';
 import { SessionContext } from 'telegraf/typings/session';
 import { addToHistory, makeMsgHistory } from './helper';
@@ -48,10 +48,13 @@ export class TgTgScene {
     );
 
     try {
-      await this.tgtgService.login((ctx.message as any).text, ctx.chat.id);
+      await this.tgtgService.login(
+        (ctx.message as any).text,
+        ctx.chat.id.toString(),
+      );
 
       this.subService.createSubscription(
-        ctx.message.chat.id,
+        ctx.message.chat.id.toString(),
         SubscriptionTypes.TooGoodToGo,
       );
 

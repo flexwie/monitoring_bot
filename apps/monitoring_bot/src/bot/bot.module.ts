@@ -11,15 +11,7 @@ import { TgTgScene } from './tgtg.scene';
 import { ToogoodtogoModule } from '@app/toogoodtogo';
 import { PrismaModule } from '@app/prisma';
 import { QueueModule } from '@app/queue';
-import { Update } from 'telegraf/typings/core/types/typegram';
 
-const logger = () => {
-  const logger = new Logger('TelegramBot');
-  return (ctx, next): void => {
-    logger.debug(`Message: ${ctx.update.message.text}`);
-    next();
-  };
-};
 @Module({
   imports: [
     PrismaModule,
@@ -31,7 +23,7 @@ const logger = () => {
       useFactory: (config: ConfigService) => {
         return {
           token: config.getOrThrow('BOT_TOKEN'),
-          middlewares: [session(), logger()],
+          middlewares: [session()],
         };
       },
       inject: [ConfigService],

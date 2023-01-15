@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TooGoodToGoTestService implements ITooGoodToGoService {
-  async login(email: string, chat_id: number) {}
+  async login(email: string, chat_id: string) {}
 
-  async getFavorites(chat_id: number) {
+  async getFavorites(chat_id: string) {
     return [data];
   }
 

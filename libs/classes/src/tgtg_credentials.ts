@@ -5,8 +5,8 @@ export class TgtgCredentials {
   @ApiProperty({ type: String })
   id: string = undefined;
 
-  @ApiProperty({ type: Number })
-  chat_id: number = undefined;
+  @ApiProperty({ type: String })
+  chat_id: string = undefined;
 
   @ApiProperty({ type: () => User })
   user: User = undefined;

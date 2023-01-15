@@ -15,7 +15,7 @@ export class BotUpdate {
   async start(@Ctx() ctx: Context<any>) {
     try {
       await this.botService.registerUser(
-        ctx.update.message.chat.id,
+        ctx.update.message.chat.id.toString(),
         ctx.update.message.from.first_name,
       );
 
@@ -50,7 +50,9 @@ export class BotUpdate {
 
   @Hears('/list')
   async list(@Ctx() ctx: Context) {
-    const result = await this.userService.getSubscriptionsByChatId(ctx.from.id);
+    const result = await this.userService.getSubscriptionsByChatId(
+      ctx.from.id.toString(),
+    );
     const text = result.Subscription.map(
       (s) => s.type + '; created at ' + s.created_at.toDateString(),
     );

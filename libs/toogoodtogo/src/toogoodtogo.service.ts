@@ -19,7 +19,7 @@ export class TooGoodToGoService implements ITgtgService {
 
   constructor(public client: PrismaService) {}
 
-  private async getClient(chat_id: number, from_login = false) {
+  private async getClient(chat_id: string, from_login = false) {
     const creds = await this.client.tgtgCredentials.findUnique({
       where: { chat_id },
     });
@@ -74,7 +74,7 @@ export class TooGoodToGoService implements ITgtgService {
     });
   }
 
-  async login(email: string, chat_id: number) {
+  async login(email: string, chat_id: string) {
     const client = await this.getClient(chat_id, true);
     this.logger.log(`Logging in with email ${email}.`);
 
@@ -109,7 +109,7 @@ export class TooGoodToGoService implements ITgtgService {
     }
   }
 
-  async polling(email: string, pollingId: string, chat_id: number) {
+  async polling(email: string, pollingId: string, chat_id: string) {
     const client = await this.getClient(chat_id, true);
     this.logger.log(`Polling ${pollingId}.`);
     const response = await client.post('auth/v3/authByRequestPollingId', {
@@ -136,7 +136,7 @@ export class TooGoodToGoService implements ITgtgService {
     }
   }
 
-  async refresh(chat_id: number) {
+  async refresh(chat_id: string) {
     this.logger.log(`Refreshing token.`);
     const client = await this.getClient(chat_id);
     const creds = await this.client.tgtgCredentials.findUniqueOrThrow({
@@ -164,7 +164,7 @@ export class TooGoodToGoService implements ITgtgService {
     }
   }
 
-  async getFavorites(chat_id: number) {
+  async getFavorites(chat_id: string) {
     const client = await this.getClient(chat_id);
     const creds = await this.client.tgtgCredentials.findUniqueOrThrow({
       where: { chat_id },

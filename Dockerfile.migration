@@ -1,5 +1,7 @@
 FROM node:18 as build
 ARG target
+ARG db
+ENV DATABASE_URL ${db}
 USER node
 
 WORKDIR /usr/src/app

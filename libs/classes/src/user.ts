@@ -10,8 +10,8 @@ export class User {
   @ApiProperty({ type: String })
   name: string = undefined;
 
-  @ApiProperty({ type: Number })
-  chat_id: number = undefined;
+  @ApiProperty({ type: String })
+  chat_id: string = undefined;
 
   @ApiProperty({ type: Date })
   created_at: Date = undefined;

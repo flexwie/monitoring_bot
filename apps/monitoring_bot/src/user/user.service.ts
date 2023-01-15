@@ -10,7 +10,7 @@ export class UserService {
     return this.client.user.findUniqueOrThrow({ where: { id } });
   }
 
-  async getUserByChatId(chat_id: number) {
+  async getUserByChatId(chat_id: string) {
     return this.client.user.findUniqueOrThrow({ where: { chat_id } });
   }
 
@@ -18,7 +18,7 @@ export class UserService {
     return this.client.user.create({ data: user });
   }
 
-  async getSubscriptionsByChatId(chat_id: number) {
+  async getSubscriptionsByChatId(chat_id: string) {
     return this.client.user.findFirstOrThrow({
       where: { chat_id },
       select: { Subscription: true },
