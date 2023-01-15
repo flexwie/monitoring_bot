@@ -37,15 +37,7 @@ export class BotUpdate {
 
   @Hears('/subscription')
   async add(@Ctx() ctx: Context) {
-    ctx.reply(
-      'ok!',
-      Markup.inlineKeyboard([
-        { text: 'Open app', web_app: { url: 'http://localhost:3002/tg' } },
-      ]),
-    );
-    //ctx.reply(
-    //'This command is not implemented yet... It will be in the near future',
-    //);
+    await (ctx as any).scene.enter('onboarding');
   }
 
   @Hears('/list')
@@ -57,15 +49,5 @@ export class BotUpdate {
       (s) => s.type + '; created at ' + s.created_at.toDateString(),
     );
     ctx.reply(`Your subscriptions:\n${text.join('\n')}`);
-  }
-
-  @Hears('/app')
-  async showApp(@Ctx() ctx: Context) {
-    await ctx.reply(
-      'ok!',
-      Markup.inlineKeyboard([
-        { text: 'Open app', web_app: { url: 'http://localhost:3002/tg' } },
-      ]),
-    );
   }
 }
