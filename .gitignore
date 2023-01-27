@@ -39,3 +39,4 @@ pod.yml
 
 .env
 .vscode
+**/*/db.dev*
