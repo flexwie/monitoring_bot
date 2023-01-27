@@ -6,10 +6,12 @@ import { SubscriptionTypes } from '../subscription/subscription.constants';
 import { SceneSessionData } from 'telegraf/typings/scenes';
 import { SessionContext } from 'telegraf/typings/session';
 import { addToHistory, makeMsgHistory } from './helper';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 
 @Scene('tgtg')
 export class TgTgScene {
+  private logger = new Logger(TgTgScene.name);
+
   constructor(
     public subService: SubscriptionService,
     @Inject(ITooGoodToGoService) public tgtgService: ITooGoodToGoService,
@@ -64,7 +66,7 @@ export class TgTgScene {
       await ctx.scene.leave();
       await ctx.scene.enter('onboarding');
     } catch (error) {
-      console.log(error);
+      this.logger.error(error);
       ctx.reply('something went wrong. please try again!');
       ctx.scene.leave();
     }

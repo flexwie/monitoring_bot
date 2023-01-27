@@ -173,8 +173,6 @@ export class TooGoodToGoService implements ITgtgService {
         where: { chat_id },
       });
 
-      console.log(creds);
-
       const response = await client.post('discover/v1/bucket', {
         responseType: 'json',
         json: {
