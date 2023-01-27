@@ -16,7 +16,6 @@ export const buildSubOnb = (subs: string[]) =>
         text: `${subs && subs.includes('tgtg') ? '✅ ' : ''} TooGoodToGo`,
         callback_data: 'sub:tgtg:onb',
       },
-      { text: 'Azure', callback_data: 'sub:azure:onb' },
     ],
     [
       {

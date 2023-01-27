@@ -78,15 +78,6 @@
       "compilerOptions": {
         "tsConfigPath": "libs/test/tsconfig.lib.json"
       }
-    },
-    "azure": {
-      "type": "library",
-      "root": "libs/azure",
-      "entryFile": "index",
-      "sourceRoot": "libs/azure/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/azure/tsconfig.lib.json"
-      }
     }
   },
   "monorepo": true,

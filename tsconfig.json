@@ -32,9 +32,7 @@
       "@app/classes": ["libs/classes/src"],
       "@app/classes/*": ["libs/classes/src/*"],
       "@app/test": ["libs/test/src"],
-      "@app/test/*": ["libs/test/src/*"],
-      "@app/azure": ["libs/azure/src"],
-      "@app/azure/*": ["libs/azure/src/*"]
+      "@app/test/*": ["libs/test/src/*"]
     }
   },
   "exclude": ["node_modules", "ssr.config.js", "dist", ".ssr"]
