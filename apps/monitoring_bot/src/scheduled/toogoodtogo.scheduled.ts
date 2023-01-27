@@ -1,6 +1,5 @@
 import { ICacheService } from '@app/cache';
 import { PrismaService } from '@app/prisma';
-import { TooGoodToGoService } from '@app/toogoodtogo';
 import { Item, ITooGoodToGoService } from '@app/toogoodtogo';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -8,7 +7,6 @@ import moment from 'moment';
 import { BotService } from '../bot/bot.service';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { buildShareLink } from '../bot/keyboards';
-import { Markup } from 'telegraf';
 
 @Injectable()
 export class ToogoodtogoSchedule {
@@ -43,8 +41,9 @@ export class ToogoodtogoSchedule {
     const key = `${today}/${fav.store.store_id}/${chat_id}`;
     if (fav.items_available > 0) {
       const is_reported = this.cache.get(key);
-      this.logger.debug(`Fetchin from cache: ${key}`);
+      this.logger.debug(`Fetching from cache: ${key}`);
       if (!is_reported) {
+        this.logger.log(`Reporting ${fav.store.store_name}`);
         this.botService.sendMessage(
           chat_id,
           `🥨 *${fav.store.store_name} just posted!* \nBe fast and grab your bite.`,
@@ -60,10 +59,9 @@ export class ToogoodtogoSchedule {
     }
   }
 
-  //https://share.toogoodtogo.com/login/accept/21522195/9585c6e7-c4fc-4d2a-93b5-79523d03f7d4
-
   @Cron(CronExpression.EVERY_3_HOURS)
   async refreshCreds() {
+    this.logger.log('Updating credentials');
     const subs = await this.subService.findAllTGTGSubscriptions();
     for (const s of subs) {
       this.logger.debug(

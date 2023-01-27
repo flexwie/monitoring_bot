@@ -35,6 +35,8 @@ export class TooGoodToGoService implements ITgtgService {
         'Accept-Language': 'en-GB',
         'Accept-Encoding': 'gzip, deflate, br',
         'Content-Type': 'application/json',
+        Cookie:
+          'datadome=6hBmygD-4IQ-kWkVoaCZJw6X82kSROMIMYuiinaapGHL4s-3Xx8jR9IubJZ1RdHnPZiN4qfggvYtWJb4HgLnHwuLwLACLoLTXS~P2WVQxohOZE7VHJr~yN8Nv8b~Ds_O; Max-Age=31536000; Domain=.apptoogoodtogo.com; Path=/; Secure; SameSite=Lax',
       },
       hooks: {
         beforeRequest: [
@@ -165,33 +167,39 @@ export class TooGoodToGoService implements ITgtgService {
   }
 
   async getFavorites(chat_id: string) {
-    const client = await this.getClient(chat_id);
-    const creds = await this.client.tgtgCredentials.findUniqueOrThrow({
-      where: { chat_id },
-    });
+    try {
+      const client = await this.getClient(chat_id);
+      const creds = await this.client.tgtgCredentials.findUniqueOrThrow({
+        where: { chat_id },
+      });
 
-    const response = await client.post('discover/v1/bucket', {
-      responseType: 'json',
-      json: {
-        paging: {
-          size: 50,
-          page: 0,
-        },
-        user_id: creds.tgtg_user_id,
-        bucket: {
-          filler_type: 'Favorites',
-        },
-        origin: {
-          longitude: 0,
-          latitude: 0,
-        },
-        radius: 90,
-      },
-    });
+      console.log(creds);
 
-    const data = response.body as BucketResponse;
+      const response = await client.post('discover/v1/bucket', {
+        responseType: 'json',
+        json: {
+          paging: {
+            size: 50,
+            page: 0,
+          },
+          user_id: creds.tgtg_user_id,
+          bucket: {
+            filler_type: 'Favorites',
+          },
+          origin: {
+            longitude: 0,
+            latitude: 0,
+          },
+          radius: 90,
+        },
+      });
 
-    return data.mobile_bucket.items;
+      const data = response.body as BucketResponse;
+
+      return data.mobile_bucket.items;
+    } catch (error) {
+      this.logger.error(error.response.body);
+    }
   }
 }
 
